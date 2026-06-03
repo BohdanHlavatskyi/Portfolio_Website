@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Portfolio — editable</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+	<header class="site-header">
+		<div class="container">
+			<h1 class="site-title" data-editable="true">Your Name</h1>
+			<nav class="site-nav">
+				<button id="settingsToggle" aria-label="Open settings">⚙️</button>
+			</nav>
+		</div>
+	</header>
+
+	<aside id="settingsPanel" class="settings-panel" aria-hidden="true">
+		<h3>Editor Settings</h3>
+		<label>
+			<input type="checkbox" id="editMode" /> Edit mode (enable inline editing)
+		</label>
+		<label>
+			Theme:
+			<select id="themeSelect">
+				<option value="light">Light</option>
+				<option value="dark">Dark</option>
+			</select>
+		</label>
+		<label>
+			Layout:
+			<select id="layoutSelect">
+				<option value="grid">Grid</option>
+				<option value="list">List</option>
+			</select>
+		</label>
+		<div class="settings-actions">
+			<button id="saveBtn">Save</button>
+			<button id="resetBtn">Reset</button>
+		</div>
+	</aside>
+
+	<main class="container main">
+		<section class="hero">
+			<h2 data-editable="true">Hi — I'm a developer.</h2>
+			<p data-editable="true">A short tagline goes here. Click the gear and enable edit mode to change this text.</p>
+		</section>
+
+		<section class="about">
+			<h3 data-editable="true">About Me</h3>
+			<p data-editable="true">Write a brief bio. Use the editor to change this content inline.</p>
+		</section>
+
+		<section class="projects">
+			<h3>Projects</h3>
+			<div id="projectsList" class="projects-grid">
+				<article class="project-card" data-editable="true">
+					<h4>Project One</h4>
+					<p>Short description.</p>
+				</article>
+				<article class="project-card" data-editable="true">
+					<h4>Project Two</h4>
+					<p>Short description.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="contact">
+			<h3 data-editable="true">Contact</h3>
+			<p data-editable="true">Email: you@example.com</p>
+		</section>
+	</main>
+
+	<footer class="site-footer container">
+		<small>&copy; <span id="year">2026</span> — <span data-editable="true">Your Name</span></small>
+	</footer>
+
+	<script src="script.js"></script>
+</body>
+</html>
