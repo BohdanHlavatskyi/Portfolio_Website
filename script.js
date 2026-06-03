@@ -436,18 +436,25 @@
 
 	// Generate QR codes
 	function generateQRCodes() {
-		const githubUrl = 'https://github.com/BohdanHlavatskyi';
-		const linkedinUrl = 'https://www.linkedin.com/in/bohdan-hlavatskyi-531248279/';
+		try {
+			if (typeof QRCode === 'undefined') {
+				console.warn('QRCode library not loaded yet');
+				return;
+			}
 
-		const githubQRContainer = qs('#qr-github');
-		const linkedinQRContainer = qs('#qr-linkedin');
+			const githubUrl = 'https://github.com/BohdanHlavatskyi';
+			const linkedinUrl = 'https://www.linkedin.com/in/bohdan-hlavatskyi-531248279/';
 
-		// Clear existing QR codes
-		githubQRContainer.innerHTML = '';
-		linkedinQRContainer.innerHTML = '';
+			const githubQRContainer = qs('#qr-github');
+			const linkedinQRContainer = qs('#qr-linkedin');
 
-		// Generate GitHub QR code
-		if (githubQRContainer && typeof QRCode !== 'undefined') {
+			if (!githubQRContainer || !linkedinQRContainer) return;
+
+			// Clear existing QR codes
+			githubQRContainer.innerHTML = '';
+			linkedinQRContainer.innerHTML = '';
+
+			// Generate GitHub QR code
 			new QRCode(githubQRContainer, {
 				text: githubUrl,
 				width: 140,
@@ -456,10 +463,8 @@
 				colorLight: '#ffffff',
 				correctLevel: QRCode.CorrectLevel.H
 			});
-		}
 
-		// Generate LinkedIn QR code
-		if (linkedinQRContainer && typeof QRCode !== 'undefined') {
+			// Generate LinkedIn QR code
 			new QRCode(linkedinQRContainer, {
 				text: linkedinUrl,
 				width: 140,
@@ -468,10 +473,27 @@
 				colorLight: '#ffffff',
 				correctLevel: QRCode.CorrectLevel.H
 			});
+		} catch (e) {
+			console.error('Error generating QR codes:', e);
 		}
 	}
 
-	// Generate QR codes after a small delay to ensure QRCode library is loaded
-	setTimeout(generateQRCodes, 100);
+	// Generate QR codes after QRCode library loads (with retry logic)
+	if (typeof QRCode !== 'undefined') {
+		generateQRCodes();
+	} else {
+		// Wait for QRCode library to load from CDN
+		let attempts = 0;
+		const checkQRCode = setInterval(() => {
+			attempts++;
+			if (typeof QRCode !== 'undefined') {
+				clearInterval(checkQRCode);
+				generateQRCodes();
+			} else if (attempts > 50) {
+				clearInterval(checkQRCode);
+				console.warn('QRCode library failed to load after 5 seconds');
+			}
+		}, 100);
+	}
 
 })();
