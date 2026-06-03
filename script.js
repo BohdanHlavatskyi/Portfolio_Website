@@ -434,4 +434,44 @@
 	loadBackgroundPhoto();
 	yearEl.textContent = new Date().getFullYear();
 
+	// Generate QR codes
+	function generateQRCodes() {
+		const githubUrl = 'https://github.com/BohdanHlavatskyi';
+		const linkedinUrl = 'https://www.linkedin.com/in/bohdan-hlavatskyi-531248279/';
+
+		const githubQRContainer = qs('#qr-github');
+		const linkedinQRContainer = qs('#qr-linkedin');
+
+		// Clear existing QR codes
+		githubQRContainer.innerHTML = '';
+		linkedinQRContainer.innerHTML = '';
+
+		// Generate GitHub QR code
+		if (githubQRContainer && typeof QRCode !== 'undefined') {
+			new QRCode(githubQRContainer, {
+				text: githubUrl,
+				width: 140,
+				height: 140,
+				colorDark: '#000000',
+				colorLight: '#ffffff',
+				correctLevel: QRCode.CorrectLevel.H
+			});
+		}
+
+		// Generate LinkedIn QR code
+		if (linkedinQRContainer && typeof QRCode !== 'undefined') {
+			new QRCode(linkedinQRContainer, {
+				text: linkedinUrl,
+				width: 140,
+				height: 140,
+				colorDark: '#000000',
+				colorLight: '#ffffff',
+				correctLevel: QRCode.CorrectLevel.H
+			});
+		}
+	}
+
+	// Generate QR codes after a small delay to ensure QRCode library is loaded
+	setTimeout(generateQRCodes, 100);
+
 })();
