@@ -280,15 +280,6 @@
 		}
 	}
 
-	function fileToBase64(file) {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.onload = () => resolve(reader.result);
-			reader.onerror = reject;
-			reader.readAsDataURL(file);
-		});
-	}
-
 	async function saveProject() {
 		const title = projectTitle.value.trim();
 		if (!title) {
@@ -365,6 +356,7 @@
 		if (confirm('Reset all content and projects?')) {
 			localStorage.removeItem(STORAGE_KEY);
 			localStorage.removeItem(PROJECTS_KEY);
+			localStorage.removeItem(COVER_PHOTO_KEY);
 			location.reload();
 		}
 	});
@@ -391,6 +383,7 @@
 	assignIds();
 	loadState();
 	loadProjects();
+	loadCoverPhoto();
 	yearEl.textContent = new Date().getFullYear();
 
 })();
