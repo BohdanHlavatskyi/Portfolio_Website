@@ -13,6 +13,8 @@
 	const yearEl = qs('#year');
 	const coverPhotoInput = qs('#coverPhotoInput');
 	const removeCoverBtn = qs('#removeCoverBtn');
+	const backgroundPhotoInput = qs('#backgroundPhotoInput');
+	const removeBackgroundBtn = qs('#removeBackgroundBtn');
 	const coverPhotoContainer = qs('#coverPhotoContainer');
 	const siteHeader = qs('.site-header');
 
@@ -33,6 +35,7 @@
 	const STORAGE_KEY = 'portfolio_state_v1';
 	const PROJECTS_KEY = 'portfolio_projects_v1';
 	const COVER_PHOTO_KEY = 'portfolio_cover_photo_v1';
+	const BACKGROUND_PHOTO_KEY = 'portfolio_background_photo_v1';
 
 	let currentProjectId = null;
 	let projects = [];
@@ -129,6 +132,31 @@
 		saveState();
 	}
 
+	async function handleBackgroundPhotoUpload(file) {
+		if (!file) return;
+		const base64 = await fileToBase64(file);
+		localStorage.setItem(BACKGROUND_PHOTO_KEY, base64);
+		displayBackgroundPhoto(base64);
+		saveState();
+	}
+
+	function displayBackgroundPhoto(dataUrl) {
+		if (dataUrl) {
+			document.body.style.backgroundImage = `url('${dataUrl}')`;
+			document.body.style.backgroundColor = '';
+		} else {
+			document.body.style.backgroundImage = '';
+			document.body.style.backgroundColor = '';
+		}
+	}
+
+	function removeBackgroundPhoto() {
+		localStorage.removeItem(BACKGROUND_PHOTO_KEY);
+		backgroundPhotoInput.value = '';
+		displayBackgroundPhoto(null);
+		saveState();
+	}
+
 	function loadCoverPhoto() {
 		try {
 			const coverPhoto = localStorage.getItem(COVER_PHOTO_KEY);
@@ -144,6 +172,13 @@
 			if (raw) projects = JSON.parse(raw);
 			renderProjects();
 		} catch (e) { console.warn('Failed to load projects', e); }
+	}
+
+	function loadBackgroundPhoto() {
+		try {
+			const backgroundPhoto = localStorage.getItem(BACKGROUND_PHOTO_KEY);
+			if (backgroundPhoto) displayBackgroundPhoto(backgroundPhoto);
+		} catch (e) { console.warn('Failed to load background photo', e); }
 	}
 
 	function renderProjects() {
@@ -346,7 +381,14 @@
 		}
 	});
 
+	backgroundPhotoInput.addEventListener('change', e => {
+		if (e.target.files.length > 0) {
+			handleBackgroundPhotoUpload(e.target.files[0]);
+		}
+	});
+
 	removeCoverBtn.addEventListener('click', removeCoverPhoto);
+	removeBackgroundBtn.addEventListener('click', removeBackgroundPhoto);
 
 	editMode.addEventListener('change', e => setEditMode(e.target.checked));
 	themeSelect.addEventListener('change', e => applyTheme(e.target.value));
@@ -357,6 +399,7 @@
 			localStorage.removeItem(STORAGE_KEY);
 			localStorage.removeItem(PROJECTS_KEY);
 			localStorage.removeItem(COVER_PHOTO_KEY);
+			localStorage.removeItem(BACKGROUND_PHOTO_KEY);
 			location.reload();
 		}
 	});
@@ -384,6 +427,7 @@
 	loadState();
 	loadProjects();
 	loadCoverPhoto();
+	loadBackgroundPhoto();
 	yearEl.textContent = new Date().getFullYear();
 
 })();
