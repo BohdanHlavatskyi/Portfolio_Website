@@ -142,10 +142,14 @@
 
 	function displayBackgroundPhoto(dataUrl) {
 		if (dataUrl) {
+			document.documentElement.style.backgroundImage = `url('${dataUrl}')`;
 			document.body.style.backgroundImage = `url('${dataUrl}')`;
+			document.documentElement.style.backgroundColor = '';
 			document.body.style.backgroundColor = '';
 		} else {
+			document.documentElement.style.backgroundImage = '';
 			document.body.style.backgroundImage = '';
+			document.documentElement.style.backgroundColor = '';
 			document.body.style.backgroundColor = '';
 		}
 	}
