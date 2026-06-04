@@ -173,7 +173,18 @@
 	function loadProjects() {
 		try {
 			const raw = localStorage.getItem(PROJECTS_KEY);
-			if (raw) projects = JSON.parse(raw);
+			if (raw) {
+				projects = JSON.parse(raw);
+			} else {
+				projects = qsa('.project-card').map(card => {
+					return {
+						title: card.querySelector('.project-title')?.textContent || '',
+						description: card.querySelector('.project-description')?.textContent || '',
+						photos: Array.from(card.querySelectorAll('.project-media img')).map(img => img.src).filter(Boolean),
+						pdf: card.querySelector('.project-media a')?.href || null
+					};
+				});
+			}
 			renderProjects();
 		} catch (e) { console.warn('Failed to load projects', e); }
 	}
